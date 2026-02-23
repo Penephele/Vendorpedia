@@ -6,8 +6,12 @@ The results pane displays matches along with distance to the closest vendor and 
 Clicking a search result item brings up a details pane with vendor name, zone, etc. If the user has TomTom installed and enabled, a button can be clicked to get a waypoint.
 
 A quick explanation of each file:
+
 ui.lua = all the main code, creates the UI, and all the necessary functions
+
 data.lua = holds some test data from scanning NPCs; this will eventually hold all the real data
+
 factions.lua = faction IDs for easier lookups when calculating prices
+
 
 (It is worth noting that we gather faction standings to calculate the base (neutral) price, and then use that value to calculate what the user will pay.)
