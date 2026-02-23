@@ -1,0 +1,20 @@
+## Interface: 120001
+
+## Title: Vendorpedia
+## Author: Penephele
+## Version: 0.0.1
+## Notes: Need an item from a vendor but don't know where to look? Vendorpedia can help!
+## X-Email: penephele@gmail.com
+## X-Category: Miscellaneous
+## DefaultState: enabled
+## SavedVariables: VPOptions
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\HereBeDragons\HereBeDragons-2.0.lua
+
+fonts.xml
+data.lua
+factions.lua
+init.lua
+ui.lua
