@@ -16,14 +16,6 @@ VPA.Version = {
     patch = 1
 }
 
--- local f = CreateFrame("Frame")
--- f:RegisterEvent("GET_ITEM_INFO_RECEIVED")
--- f:SetScript("OnEvent", function(_, _, itemID, success)
---     if success then
---         VPA.BuildSearchIndex()
---     end
--- end)
-
 
 -- Main Frame
 function VPA.CreateMainFrame()
@@ -39,6 +31,10 @@ function VPA.CreateMainFrame()
     frame:SetPortraitToAsset("Interface\\Icons\\INV_Misc_Book_06")
     frame:Hide()
     tinsert(UISpecialFrames, "VPAFrame")
+    frame.Text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    frame.Text:SetSize(340, 40)
+    frame.Text:SetPoint("TOPLEFT", 64, -22)
+    frame.Text:SetText("This is a bunch of useless text to make sure the fontstring has the correct size and all that good stuff so nothing to see here carry on.")
     frame:SetScript("OnHide", function() PlaySound(16346) end)
     VPA.Frame = frame
 end
@@ -47,7 +43,7 @@ end
 function VPA.CreateSearchBox()
     local searchBox = CreateFrame("EditBox", "VPASearchBox", VPA.Frame, "SearchBoxTemplate")
     searchBox:SetSize(340, 20)
-    searchBox:SetPoint("TOPLEFT", VPA.Frame, "TOPLEFT", 64, -28)
+    searchBox:SetPoint("TOPLEFT", VPA.Frame, "TOPLEFT", 64, -52)
     searchBox:SetScript("OnTextChanged", function(self, userInput)
         SearchBoxTemplate_OnTextChanged(self)
         local text = self:GetText()
@@ -66,8 +62,8 @@ end
 -- Results List
 function VPA.CreateResultsInset()
     local inset = CreateFrame("Frame", "VPAResultsInset", VPA.Frame, "InsetFrameTemplate")
-    inset:SetPoint("TOPLEFT", VPA.Frame, "TOPLEFT", 15, -65)
-    inset:SetPoint("BOTTOMRIGHT", VPA.Frame, "BOTTOMRIGHT", -15, 15)
+    inset:SetPoint("TOPLEFT", VPA.Frame, "TOPLEFT", 15, -92)
+    inset:SetPoint("BOTTOMRIGHT", VPA.Frame, "BOTTOMRIGHT", -15, 18)
     VPA.ResultsInset = inset
 end
 
@@ -91,11 +87,14 @@ function VPA.CreateResultsHeaders()
     headers.Item:SetPoint("LEFT", 6, 0)
     headers.Item:SetText("Item")
     headers.Distance = headers:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    headers.Distance:SetPoint("LEFT", 266, 0)
+    headers.Distance:SetWidth(150)
+    headers.Distance:SetPoint("RIGHT", -172, 0)
+    headers.Distance:SetJustifyH("RIGHT")
     headers.Distance:SetText("Distance")
     headers.Price = headers:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     headers.Price:SetWidth(150)
-    headers.Price:SetPoint("RIGHT", -28, 0)
+    headers.Price:SetPoint("RIGHT", -30, 0)
+    headers.Price:SetJustifyH("RIGHT")
     headers.Price:SetText("Price")
     VPA.ResultsHeaders = headers
 end
@@ -320,33 +319,6 @@ end)
 VPA.BuildSearchIndex()
 VPA.BuildUI()
 
-VPA.DebugMode = false
-
-if VPA.DebugMode then
-    VPA.Results = {}
-    -- VPA.Results = {
-    --     {
-    --         itemID = 6948,
-    --         name = "Hearthstone",
-    --         distance = "—",
-    --         price = "Free",
-    --         icon = 134414,
-    --         vendor = "Innkeeper",
-    --         zone = "Stormwind",
-    --         faction = "None",
-    --     },
-    -- }
-    for i = 1, 100 do
-        table.insert(VPA.Results, {
-            itemID = 6948, -- Hearthstone (safe cached item)
-            name = "Test Item " .. i,
-            distance = (i * 25) .. " yd",
-            price = i .. "g",
-            icon = 134414,
-        })
-    end
-end
-
 
 function SlashCmdList.VENDORPEDIA(msg)
     if msg == "show" then
@@ -377,7 +349,7 @@ end
 
 
 -- Function to extract a name from a link and put it in the search box
-local function VPAInsertLink(link)
+function VPA.InsertLink(link)
     -- Don't steal the link if chat edit box has focus (safe if ChatFrame1EditBox missing in 12.x)
     if not link or not VPA.SearchBox or not VPA.SearchBox:IsVisible() then
         return
@@ -418,7 +390,7 @@ loader:SetScript("OnEvent", function()
         function ChatFrameUtil.InsertLink(link)
             -- If Vendorpedia is open, consume the link
             if VPA.Frame and VPA.Frame:IsShown() then
-                if VPAInsertLink(link) then
+                if VPA.InsertLink(link) then
                     return true -- STOP further processing
                 end
             end
@@ -432,7 +404,7 @@ loader:SetScript("OnEvent", function()
 
         function ChatEdit_InsertLink(link)
             if VPA.Frame and VPA.Frame:IsShown() then
-                if VPAInsertLink(link) then
+                if VPA.InsertLink(link) then
                     return true
                 end
             end
